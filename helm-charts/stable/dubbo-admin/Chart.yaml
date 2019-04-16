@@ -1,0 +1,19 @@
+appVersion: 8.5.31
+description: Chart for Apache Tomcat, modify ingress
+engine: gotpl
+home: http://dubbo-admin.apache.org
+icon: https://bitnami.com/assets/stacks/dubbo-admin/img/dubbo-admin-stack-110x117.png
+keywords:
+- dubbo-admin
+- java
+- http
+- web
+- application server
+- jsp
+maintainers:
+- email: containers@bitnami.com
+  name: Bitnami
+name: dubbo-admin
+sources:
+- https://github.com/bitnami/bitnami-docker-dubbo-admin
+version: 1.0.0

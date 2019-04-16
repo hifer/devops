@@ -1,0 +1,44 @@
+# Default values for zookeeper.
+# This is a YAML-formatted file.
+# Declare name/value pairs to be passed into your templates.
+# name: value
+servers: 1
+# minAvailable: 2
+resources:
+  requests:
+    cpu: 100m
+    memory: 200Mi
+  limits:
+    cpu: 1
+    memory: 1Gi
+heap: "300M"
+# only huawei cloud need provider、region、zone
+# storageClass: alicloud-disk-efficiency
+storageClass: sas
+#      accessMode: ReadWriteOnce
+provider: huaweicloud
+region: cn-north-1
+zone: cn-north-1c
+
+storage: "20Gi"
+#storageClass: alicloud-disk-efficiency
+serverPort: 2888
+leaderElectionPort: 3888
+clientPort: 2181
+imagePullPolicy: "Always"
+image: "harbor.yonyouccs.com/base/k8szk:v3"
+imagePullSecrets: "regcred"
+tickTimeMs: 2000
+initTicks: 10
+syncTicks: 5
+clientCnxns: 60
+snapRetain: 3
+purgeHours: 1
+probeInitialDelaySeconds: 15
+probeTimeoutSeconds: 5
+antiAffinity: "hard"
+logLevel: "INFO"
+security:
+  enabled: false
+  runAsUser: 1000
+  fsGroup: 1000

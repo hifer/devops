@@ -1,0 +1,21 @@
+{{- if .Values.ingress.enabled -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  name: {{ template "fullname" . }}
+spec:
+  rules:
+  - host: devk8s-logs.yonyouccs.com
+    http:
+      paths:
+      - backend:
+          serviceName: {{ template "fullname" . }}
+          servicePort: 5601
+        path: {{ .Values.ingress.path }}
+  tls:
+  - hosts:
+    - devk8s-logs.yonyouccs.com
+    secretName: tls-yonyouccs
+{{- end }}

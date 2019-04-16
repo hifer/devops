@@ -1,0 +1,17 @@
+appVersion: 5.5.1
+description: Chart for elasticSeach
+engine: gotpl
+home: http://tomcat.apache.org
+icon: https://bitnami.com/assets/stacks/tomcat/img/tomcat-stack-110x117.png
+keywords:
+- elasticsearch
+- kibana
+- logstash
+- ELK
+maintainers:
+- email: qiany@yonyou.com
+  name: qiany
+name: es-ik-sql
+sources:
+- https://github.com/bitnami/bitnami-docker-tomcat
+version: 1.0.2

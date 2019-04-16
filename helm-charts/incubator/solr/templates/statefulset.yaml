@@ -1,0 +1,104 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: {{ template "solr.fullname" . }}
+  labels:
+    app: {{ include "solr.name" . | quote }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
+spec:
+  serviceName: {{ template "solr.fullname" . }}
+  replicas: {{ .Values.replicas }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "solr.name" . | quote }}
+        release: {{ .Release.Name | quote }}
+        {{- if eq .Values.provider "huaweicloud" }}
+        failure-domain.beta.kubernetes.io/region: {{ .Values.region | quote }}
+        failure-domain.beta.kubernetes.io/zone:  {{ .Values.zone | quote }}
+        {{- end }}
+    spec:
+      {{- if eq .Values.antiAffinity "hard" }}
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: "kubernetes.io/hostname"
+              labelSelector:
+                matchLabels:
+                  app: {{ include "solr.name" . | quote }}
+                  release: {{ .Release.Name | quote }}
+                  {{- if eq .Values.provider "huaweicloud" }}
+                  failure-domain.beta.kubernetes.io/region: {{ .Values.region | quote }}
+                  failure-domain.beta.kubernetes.io/zone:  {{ .Values.zone | quote }}
+                  {{- end }}
+      {{- else if eq .Values.antiAffinity "soft" }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
+              podAffinityTerm:
+                topologyKey: "kubernetes.io/hostname"
+                labelSelector:
+                  matchLabels:
+                    app: {{ include "solr.name" . | quote }}
+                    release: {{ .Release.Name | quote }}
+                    {{- if eq .Values.provider "huaweicloud" }}
+                    failure-domain.beta.kubernetes.io/region: {{ .Values.region | quote }}
+                    failure-domain.beta.kubernetes.io/zone:  {{ .Values.zone | quote }}
+                    {{- end }}
+      {{- end }}
+      {{- if .Values.image.pullSecrets }}
+      imagePullSecrets:
+      {{- range .Values.image.pullSecrets }}
+        - name: {{ . }}
+      {{- end}}
+      {{- end }}
+      containers:
+      - name: {{ template "solr.name" . }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        image: {{ .Values.image.registry }}
+        command: {{ .Values.command }}
+        args: {{ .Values.args }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        ports:
+        - containerPort: {{ .Values.containerPort }}
+          name: solr
+        {{- if .Values.environment }}
+        env:
+{{ toYaml .Values.environment | indent 10 }}
+        {{- end }}
+        readinessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.containerPort }}
+          initialDelaySeconds: {{ .Values.probeInitialDelaySeconds }}
+          timeoutSeconds: {{ .Values.probeTimeoutSeconds }}
+        livenessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.containerPort }}
+          initialDelaySeconds: {{ .Values.probeInitialDelaySeconds }}
+          timeoutSeconds: {{ .Values.probeTimeoutSeconds }}
+        volumeMounts:
+        - name: datadir
+          mountPath: /opt/solr/server/solr/share
+          subPath: share
+      {{- if eq .Values.security.enabled true }}
+      securityContext:
+        runAsUser: {{ .Values.security.runAsUser }}
+        fsGroup: {{ .Values.security.fsGroup }}
+      {{- end }}
+  volumeClaimTemplates:
+  - metadata:
+      name: datadir
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: {{ .Values.storage }}
+      {{- if .Values.storageClass }}
+      storageClassName: {{ .Values.storageClass | quote }}
+      {{- end }}

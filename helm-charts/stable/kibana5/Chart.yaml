@@ -1,0 +1,16 @@
+appVersion: 5.4.0
+description: Chart for kibana
+engine: gotpl
+home: http://tomcat.apache.org
+icon: https://bitnami.com/assets/stacks/tomcat/img/tomcat-stack-110x117.png
+keywords:
+- elasticsearch
+- kibana
+- ELK
+maintainers:
+- email: qiany@yonyou.com
+  name: qiany
+name: kibana5
+sources:
+- https://github.com/bitnami/bitnami-docker-tomcat
+version: 1.0.0

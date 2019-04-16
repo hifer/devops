@@ -1,0 +1,42 @@
+## elasticsearch5 image version
+## ref: https://hub.docker.com/r/bitnami/tomcat/tags/
+##
+image:
+  registry: harbor.yonyouccs.com
+  repository: base/kibana
+  tag: 5.4.0
+  pullPolicy: IfNotPresent
+  pullSecrets:
+    - regcred 
+
+elasticsearch:
+  ip: 10.247.145.120
+
+serviceType: ClusterIP
+
+persistence:
+  enabled: false
+  ## If defined, volume.beta.kubernetes.io/storage-class: <storageClass>
+  ## Default: volume.alpha.kubernetes.io/storage-class: default
+  ##
+  storageClass: alicloud-disk-efficiency
+  accessMode: ReadWriteOnce
+  size: 20Gi
+
+## Configure resource requests and limits
+## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+##
+resources:
+  requests:
+    memory: 512Mi
+    cpu: 10m
+
+ingress:
+  enabled: true
+  path: /
+  hosts:
+    - pre-logs.yonyouccs.com
+  tls:
+    - secretName: tls-yonyouccs
+      hosts:
+        - pre-logs.yonyouccs.com

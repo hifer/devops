@@ -1,0 +1,53 @@
+## elasticsearch5 image version
+## ref: https://hub.docker.com/r/bitnami/tomcat/tags/
+##
+image:
+  registry: harbor.yonyouccs.com
+  repository: base/logstash
+  tag: 5.4.0
+  pullPolicy: IfNotPresent
+  pullSecrets:
+    - regcred 
+
+logstash:
+  port: 5044
+
+elasticsearch:
+  ip: 10.247.145.120
+
+serviceType: ClusterIP
+
+persistence:
+  enabled: false
+  ## If defined, volume.beta.kubernetes.io/storage-class: <storageClass>
+  ## Default: volume.alpha.kubernetes.io/storage-class: default
+  ##
+  ## only huawei cloud need provider、region、zone
+
+  ## storageClass: alicloud-disk-efficiency
+  storageClass: sas
+
+  provider: huaweicloud
+  region: cn-north-1
+  zone: cn-north-1c
+
+  accessMode: ReadWriteOnce
+  size: 20Gi
+
+## Configure resource requests and limits
+## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+##
+resources:
+  requests:
+    memory: 512Mi
+    cpu: 10m
+
+ingress:
+  enabled: false
+  path: /cas
+  hosts:
+    - pre.yonyouccs.com
+  tls:
+    - secretName: tls-yonyouccs
+      hosts:
+        - pre.yonyouccs.com

@@ -1,0 +1,5 @@
+appId=3c8242c9467d059f9b718a890c9932ca
+key=test
+username=admin
+expiredTs=1471776321654
+expiredDate=2016-08-21 18:45:21

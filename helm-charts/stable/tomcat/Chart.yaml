@@ -1,0 +1,19 @@
+appVersion: 8.5.31
+description: Chart for Apache Tomcat, modify ingress
+engine: gotpl
+home: http://tomcat.apache.org
+icon: https://bitnami.com/assets/stacks/tomcat/img/tomcat-stack-110x117.png
+keywords:
+- tomcat
+- java
+- http
+- web
+- application server
+- jsp
+maintainers:
+- email: containers@bitnami.com
+  name: Bitnami
+name: tomcat
+sources:
+- https://github.com/bitnami/bitnami-docker-tomcat
+version: 1.0.11
