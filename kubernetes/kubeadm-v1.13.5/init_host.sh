@@ -173,6 +173,7 @@ cat > /etc/docker/daemon.json <<EOF
       "max-size": "100m", 
       "max-file": "10" 
   },
+  "registry-mirrors": ["https://q2uvt0x7.mirror.aliyuncs.com"],
   "insecure-registries": ["harbor.yonyouccs.com"]
 }
 EOF
