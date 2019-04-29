@@ -76,6 +76,10 @@ apiServer:
 networking:
   # This CIDR is a Calico default. Substitute or remove for your CNI provider.
   podSubnet: ${CIDR}
+controllerManagerExtraArgs:
+  address: 0.0.0.0
+schedulerExtraArgs:
+  address: 0.0.0.0
 """ > /etc/kubernetes/kubeadm-config.yaml
 
 kubeadm init --config /etc/kubernetes/kubeadm-config.yaml

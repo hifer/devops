@@ -543,14 +543,20 @@ kubeEtcd:
   serviceMonitor:
     ## Scrape interval. If not set, the Prometheus default scrape interval is used.
     ##
+    ##interval: ""
+    ##scheme: http
+    ##insecureSkipVerify: false
+    ##serverName: ""
+    ##caFile: ""
+    ##certFile: ""
+    ##keyFile: ""
     interval: ""
-    scheme: http
-    insecureSkipVerify: false
-    serverName: ""
-    caFile: ""
-    certFile: ""
-    keyFile: ""
-
+    scheme: https
+    insecureSkipVerify: true
+    serverName: "localhost"
+    caFile: "/etc/prometheus/secrets/etcd-certs/ca.crt"
+    certFile: "/etc/prometheus/secrets/etcd-certs/healthcheck-client.crt"
+    keyFile: "/etc/prometheus/secrets/etcd-certs/healthcheck-client.key"
 
 ## Component scraping kube scheduler
 ##
