@@ -324,13 +324,13 @@ grafana:
   ingress:
     ## If true, Grafana Ingress will be created
     ##
-    enabled: false
+    enabled: true
 
     ## Annotations for Grafana Ingress
     ##
-    annotations: {}
-      # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      kubernetes.io/tls-acme: "true"
 
     ## Labels to be added to the Ingress
     ##
@@ -341,7 +341,8 @@ grafana:
     ##
     # hosts:
     #   - grafana.domain.com
-    hosts: []
+    hosts:
+        - monitor-test.yonyouccs.com
 
     ## Path for grafana ingress
     path: /
@@ -349,10 +350,10 @@ grafana:
     ## TLS configuration for grafana Ingress
     ## Secret must be manually created in the namespace
     ##
-    tls: []
-    # - secretName: grafana-general-tls
-    #   hosts:
-    #   - grafana.example.com
+    tls:
+    - secretName: tls-yonyouccs
+      hosts:
+      - monitor-test.yonyouccs.com
 
   sidecar:
     dashboards:
