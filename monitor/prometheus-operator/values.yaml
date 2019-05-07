@@ -133,26 +133,32 @@ alertmanager:
   #           {{ end }}
 
   ingress:
-    enabled: false
+    enabled: true
 
-    annotations: {}
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      kubernetes.io/tls-acme: "true"
 
     labels: {}
 
     ## Hosts must be provided if Ingress is enabled.
     ##
-    hosts: []
+    hosts:
+        - alert-test.yonyouccs.com
       # - alertmanager.domain.com
 
     ## Paths to use for ingress rules - one path should match the alertmanagerSpec.routePrefix
     ##
-    paths: []
-    # - /
+    paths: 
+      - /
 
     ## TLS configuration for Alertmanager Ingress
     ## Secret must be manually created in the namespace
     ##
-    tls: []
+    tls:
+    - secretName: tls-yonyouccs
+      hosts:
+      - alert-test.yonyouccs.com
     # - secretName: alertmanager-general-tls
     #   hosts:
     #   - alertmanager.example.com
@@ -875,8 +881,10 @@ prometheus:
     maxUnavailable: ""
 
   ingress:
-    enabled: false
-    annotations: {}
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      kubernetes.io/tls-acme: "true"
     labels: {}
 
     ## Hostnames.
@@ -884,17 +892,21 @@ prometheus:
     ##
     # hosts:
     #   - prometheus.domain.com
-    hosts: []
+    hosts:
+        - prom-test.yonyouccs.com
 
     ## Paths to use for ingress rules - one path should match the prometheusSpec.routePrefix
     ##
-    paths: []
-    # - /
+    paths:
+      - /
 
     ## TLS configuration for Prometheus Ingress
     ## Secret must be manually created in the namespace
     ##
-    tls: []
+    tls:
+    - secretName: tls-yonyouccs
+      hosts:
+      - prom-test.yonyouccs.com
       # - secretName: prometheus-general-tls
       #   hosts:
       #     - prometheus.example.com
