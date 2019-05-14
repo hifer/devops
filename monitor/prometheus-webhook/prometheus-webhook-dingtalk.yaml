@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-webhook-dingtalk
+  namespace: default
+  labels:
+    app: prometheus-webhook-dingtalk
+spec:
+  type: ClusterIP
+  selector:
+    app: prometheus-webhook-dingtalk
+  ports:
+  - name: http
+    port: 5358
+    targetPort: 5358
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: prometheus-webhook-dingtalk
+  namespace: default
+spec:
+  template:
+    metadata:
+      labels:
+        app: prometheus-webhook-dingtalk
+    spec:
+      containers:
+      - name: prometheus-webhook-dingtalk
+        image: harbor.yonyouccs.com/monitor/prometheus-webhook-dingtalk:v0.3.0
+        args:
+          - '--web.listen-address=:5358'
+          - '--ding.profile=webhook=https://oapi.dingtalk.com/robot/send?access_token=346b689fa0c90456c2aae500b52de43bc4f41e039392dafe06364b3e957cdcab'
+          - '--ding.timeout=5s'
+          - '--log.level=info'
+        ports:
+        - containerPort: 5358
