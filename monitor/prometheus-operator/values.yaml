@@ -97,19 +97,54 @@ alertmanager:
   config:
     global:
       resolve_timeout: 5m
+      # The smarthost and SMTP sender used for mail notifications.
+      smtp_smarthost: 'smtp.163.com:465'
+      smtp_from: 'yyalert@163.com'
+      smtp_auth_username: 'yyalert@163.com'
+      smtp_auth_password: 'lvhfa163'
+      smtp_require_tls: false
+      wechat_api_url: 'https://qyapi.weixin.qq.com/cgi-bin/'
+      wechat_api_secret: 'aABt-e1Qne7Tc2aNwE55cpcErOSbTM_rH-lI7pHDhc8'
+      wechat_api_corp_id: 'ww38f70874d3557e2a'
     route:
       group_by: ['job']
-      group_wait: 30s
-      group_interval: 5m
-      repeat_interval: 12h
-      receiver: 'null'
+      group_wait: 10s
+      group_interval: 60s
+      repeat_interval: 10d
+      receiver: 'wechat'
+      #routes:
+      #- match:
+      #    alertname: Watchdog
+      #  receiver: 'webhook'
+      #- match:
+      #    alertnage: TargetDown
+      #  receiver: 'webhook'
+      #receiver: 'emails'
       routes:
       - match:
-          alertname: Watchdog
-        receiver: 'null'
+          alertnage: TargetDown
+        receiver: 'emails'
     receivers:
-    - name: 'null'
-
+      - name: 'webhook'
+        webhook_configs:
+        - url: 'http://prometheus-webhook-dingtalk:5358/dingtalk/webhook/send'
+          send_resolved: true
+      - name: 'emails'
+        email_configs:
+        - to: 'weilong1@yonyou.com,lvhfa@yonyou.com,qiany@yonyou.com'
+          send_resolved: true
+      - name: 'pagerduty'
+        pagerduty_configs:
+        - service_key: 2a57be14276743aa87ef2d7fe608a8ac
+      - name: 'wechat'
+        wechat_configs:
+        - to_user: '@all'
+          to_party: ''
+          to_tag: ''
+          agent_id: '1000002'
+          corp_id: 'ww38f70874d3557e2a'
+          api_secret: 'aABt-e1Qne7Tc2aNwE55cpcErOSbTM_rH-lI7pHDhc8'
+          send_resolved: true
   ## Alertmanager template files to format alerts
   ## ref: https://prometheus.io/docs/alerting/notifications/
   ##      https://prometheus.io/docs/alerting/notification_examples/
@@ -984,6 +1019,8 @@ prometheus:
     ## The ConfigMaps are mounted into /etc/prometheus/configmaps/.
     ##
     configMaps: []
+#      - "prometheus-config"
+#      - "node-rules"
 
     ## QuerySpec defines the query command line flags when starting Prometheus.
     ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#queryspec
@@ -1005,16 +1042,15 @@ prometheus:
     ## PrometheusRules to be selected for target discovery.
     ## If {}, select all ServiceMonitors
     ##
-    ruleSelector: {}
+    ruleSelector:
     ## Example which select all prometheusrules resources
     ## with label "prometheus" with values any of "example-rules" or "example-rules-2"
-    # ruleSelector:
-    #   matchExpressions:
-    #     - key: prometheus
-    #       operator: In
-    #       values:
-    #         - example-rules
-    #         - example-rules-2
+      ruleSelector:
+        matchExpressions:
+          - key: prometheus
+            operator: In
+            values:
+              - node
     #
     ## Example which select all prometheusrules resources with label "role" set to "example-rules"
     # ruleSelector:
@@ -1130,7 +1166,23 @@ prometheus:
     ## The scrape configuraiton example below will find master nodes, provided they have the name .*mst.*, relabel the
     ## port to 2379 and allow etcd scraping provided it is running on all Kubernetes master nodes
     ##
-    additionalScrapeConfigs: []
+    additionalScrapeConfigs:
+      - job_name: 'blackbox'
+        metrics_path: /probe
+        params:
+          module: [http_2xx]
+        static_configs:
+          - targets:
+            - 'https://cc.yonyouccs.com/cas/monitor/PING' 
+            - 'https://cc.yonyouccs.com/icop-workbench/monitor/PING' 
+        relabel_configs:
+          - source_labels: [__address__]
+            target_label: __param_target
+          - source_labels: [__param_target]
+            target_label: instance
+          - target_label: __address__
+            replacement: prometheus-operator-prometheus-blackbox-exporter:9115  # Blackbox exporter
+
     # - job_name: kube-etcd
     #   kubernetes_sd_configs:
     #     - role: node
@@ -1218,7 +1270,22 @@ prometheus:
     ##
     additionalScrapeConfigsExternal: false
 
-  additionalServiceMonitors: []
+  additionalServiceMonitors:
+    - name: "blackbox"
+      additionalLabels:
+        app: "prometheus-operator-blackbox"
+        release: "prometheus-operator"
+      jobLabel: "blackbox"
+      selector:
+        matchLabels:
+          app: "prometheus-operator-blackbox"
+          release: "prometheus-operator"
+      namespaceSelector:
+        any: true
+      endpoints:
+        - port: 'http'
+          interval: 30s
+          path: /probe
   ## Name of the ServiceMonitor to create
   ##
   # - name: ""

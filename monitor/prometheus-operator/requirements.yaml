@@ -14,3 +14,7 @@ dependencies:
     version: 2.3.*
     repository: https://kubernetes-charts.storage.googleapis.com/
     condition: grafana.enabled
+
+  - name: prometheus-blackbox-exporter
+    version: 0.3.*
+    repository: https://kubernetes-charts.storage.googleapis.com/
