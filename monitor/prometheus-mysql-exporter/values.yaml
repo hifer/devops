@@ -82,10 +82,11 @@ mysql:
   db: ""
   host: "rm-2ze4jq9gk7jvnb5ak.mysql.rds.aliyuncs.com"
   param: ""
-  pass: "eorkdfj189kljadAkdfjlsak"
+  pass: "P@ssw0rd0123!"
   port: 3306
   protocol: ""
-  user: "cc_test_admin"
+#  user: "cc_test_admin"
+  user: "exporter"
 
 # cloudsqlproxy https://cloud.google.com/sql/docs/mysql/sql-proxy
 cloudsqlproxy:

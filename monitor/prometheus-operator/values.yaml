@@ -1182,6 +1182,30 @@ prometheus:
             target_label: instance
           - target_label: __address__
             replacement: prometheus-operator-prometheus-blackbox-exporter:9115  # Blackbox exporter
+######mysql############
+#      - job_name: 'mysql global status'
+      - job_name: 'mysql'
+        metrics_path: /metrics
+        params:
+        static_configs:
+          - targets:
+            - 'prometheus-mysql-exporter:9104'
+#        params:
+#          collect[]:
+#            - 'global_status'
+#            - 'innodb_tablespaces'
+#      - job_name: 'mysql performance'
+#        metrics_path: /metrics
+#        static_configs:
+#          - targets:
+#            - 'prometheus-mysql-exporter:9104'
+#        params:
+#          collect[]:
+#            - perf_schema.tableiowaits
+#            - perf_schema.indexiowaits
+#            - perf_schema.tablelocks
+
+
 
     # - job_name: kube-etcd
     #   kubernetes_sd_configs:
@@ -1286,6 +1310,21 @@ prometheus:
         - port: 'http'
           interval: 30s
           path: /probe
+    - name: "prometheus-exporter-mysql"
+      additionalLabels:
+        app: "prometheus-operator-mysql"
+        release: "prometheus-operator"
+      jobLabel: "prometheus-exporter-mysql"
+      selector:
+        matchLabels:
+          app: "prometheus-operator-mysql"
+          release: "prometheus-operator"
+      namespaceSelector:
+        any: true
+      endpoints:
+        - port: 'mysql-exporter'
+          interval: 30s
+          path: /metrics
   ## Name of the ServiceMonitor to create
   ##
   # - name: ""
