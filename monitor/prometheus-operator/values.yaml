@@ -1205,7 +1205,15 @@ prometheus:
 #            - perf_schema.indexiowaits
 #            - perf_schema.tablelocks
 
-
+######redis############
+      - job_name: 'redis'
+        metrics_path: /metrics
+        params:
+        static_configs:
+          - targets:
+            - 'prometheus-redis-exporter:9121'
+            labels:
+              group: 'devk8s-redis'
 
     # - job_name: kube-etcd
     #   kubernetes_sd_configs:
@@ -1323,6 +1331,21 @@ prometheus:
         any: true
       endpoints:
         - port: 'mysql-exporter'
+          interval: 30s
+          path: /metrics
+    - name: "prometheus-redis-exporter"
+      additionalLabels:
+        app: "prometheus-redis-exporter"
+        release: "prometheus-operator"
+      jobLabel: "prometheus-redis-exporter"
+      selector:
+        matchLabels:
+          app: "prometheus-redis-exporter"
+          release: "prometheus-operator"
+      namespaceSelector:
+        any: true
+      endpoints:
+        - port: 'redis-exporter'
           interval: 30s
           path: /metrics
   ## Name of the ServiceMonitor to create
