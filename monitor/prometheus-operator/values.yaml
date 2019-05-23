@@ -1215,6 +1215,16 @@ prometheus:
             labels:
               group: 'devk8s-redis'
 
+######redis############
+      - job_name: 'rabbitmq'
+        metrics_path: /metrics
+        params:
+        static_configs:
+          - targets:
+            - 'prometheus-rabbitmq-exporter:9419'
+            labels:
+              group: 'devk8s-rabbitmq'
+
     # - job_name: kube-etcd
     #   kubernetes_sd_configs:
     #     - role: node
@@ -1346,6 +1356,21 @@ prometheus:
         any: true
       endpoints:
         - port: 'redis-exporter'
+          interval: 30s
+          path: /metrics
+    - name: "prometheus-rabbitmq-exporter"
+      additionalLabels:
+        app: "prometheus-rabbitmq-exporter"
+        release: "prometheus-operator"
+      jobLabel: "prometheus-rabbitmq-exporter"
+      selector:
+        matchLabels:
+          app: "prometheus-rabbitmq-exporter"
+          release: "prometheus-operator"
+      namespaceSelector:
+        any: true
+      endpoints:
+        - port: 'rabbitmq-exporter'
           interval: 30s
           path: /metrics
   ## Name of the ServiceMonitor to create
