@@ -1179,9 +1179,9 @@ prometheus:
           - source_labels: [__address__]
             target_label: __param_target
           - source_labels: [__param_target]
-            target_label: instance
+            target_label: target
           - target_label: __address__
-            replacement: prometheus-operator-prometheus-blackbox-exporter:9115  # Blackbox exporter
+            replacement: prometheus-blackbox-exporter:9115  # Blackbox exporter
 ######mysql############
 #      - job_name: 'mysql global status'
       - job_name: 'mysql'
