@@ -62,5 +62,5 @@ docker run -d --network host --name mysql \
 	-v /data/docker_mount/mysql/etc/mysql/conf.d:/etc/mysql/conf.d \
 	-v /data/docker_mount/mysql/var/log/mysql:/var/log/mysql \
 	-v /data/docker_mount/mysql/var/lib/mysql:/var/lib/mysql \
-	-e MYSQL_ROOT_PASSWORD=P@ssw0rd01! \
-	registry.dev.yonyouccs.com/base/mysql:yyccs0.01
+	-e MYSQL_ROOT_PASSWORD=xxxxxxx \
+	harbor.yonyouccs.com/base/mysql:c5.7.26
