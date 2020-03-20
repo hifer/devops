@@ -131,7 +131,7 @@ if [ $? -eq 0 ];then
 fi
 
 yum install -y yum-utils device-mapper-persistent-data lvm2
-yum install -y https://mirrors.aliyun.com/docker-ce/linux/centos/7/x86_64/stable/Packages/docker-ce-18.06.3.ce-3.el7.x86_64.rpm
+yum install -y https://mirrors.aliyun.com/docker-ce/linux/centos/7/x86_64/stable/Packages/docker-ce-19.03.8-3.el7.x86_64.rpm
 
 if [ $? -ne 0 ]; then
   echo -e "\033[41;1m 安装docker失败，请检查报错信息 \033[0m"
