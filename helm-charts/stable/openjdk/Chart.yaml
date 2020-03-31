@@ -1,0 +1,11 @@
+apiVersion: v1
+appVersion: 1.8.0
+description: Chart for openjdk
+keywords:
+- java
+- spring cloud
+maintainers:
+- email: lvhfa@yonyou.com
+  name: lvhfa
+name: openjdk
+version: 1.0.0
