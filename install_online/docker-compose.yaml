@@ -1,0 +1,74 @@
+version: '3'
+
+services:
+  redis:  
+    hostname: redis
+    image: harbor.yonyouccs.com/setup/redis:5.0.5
+    container_name: redis
+    restart: always
+    command: redis-server /etc/redis.conf
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /data/docker_mount/redis/data:/data
+      - ./redis/conf/redis.conf:/etc/redis.conf
+    ports:
+        - "6379:6379"
+    networks:
+      - ijz
+    privileged: true
+   
+  rabbitmq:
+    image: harbor.yonyouccs.com/setup/rabbitmq:3.7.15-management
+    restart: always
+    container_name: rabbitmq
+    volumes:
+     - /etc/localtime:/etc/localtime:ro
+     - /data/docker_mount/rabbitmq/rabbitmq_data:/var/lib/rabbitmq:rw
+    environment:
+      - TZ=Asia/Shanghai
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=Ufsoft*123
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    networks:
+      - ijz
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+
+  elasticsearch:
+    image: harbor.yonyouccs.com/setup/es-ik-sql:5.5.1
+    container_name: elasticsearch
+    restart: always
+    volumes:
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - /data/docker_mount/elasticsearch/data:/usr/share/elasticsearch/data:rw
+      - /data/docker_mount/elasticsearch/logs:/user/share/elasticsearch/logs:rw
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xmx1g -Xms1g"
+    networks:
+      - ijz
+    privileged: true
+
+#  elasticsearch-head:
+#    image: harbor.yonyouccs.com/setup/elasticsearch-head:5
+#    container_name: es-head
+#    restart: always
+#    ports:
+#     - "9100:9100"
+#    networks:
+#      - ijz
+#    privileged: true
+
+networks:
+  ijz:
+    driver: bridge
