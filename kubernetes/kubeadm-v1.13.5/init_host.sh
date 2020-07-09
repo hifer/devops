@@ -166,7 +166,7 @@ mkdir -p /etc/docker
 cat > /etc/docker/daemon.json <<EOF
 {
   "data-root": "/data/docker",
-  "exec-opts": ["native.cgroupdriver=cgroupfs"],
+  "exec-opts": ["native.cgroupdriver=systemd"],
   "storage-driver": "overlay2", 
   "storage-opts":["overlay2.override_kernel_check=true"],
   "log-driver": "json-file", 
